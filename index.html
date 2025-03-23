@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>myWaterfall</title>
+  </head>
+  <body>
+    <script type="module" src="./src/index.ts"></script>
+    <div id="app">
+      <my-waterfall id="myWaterfall" class="my-waterfall" cols="5" gap="10" delay="300" useLazy="true" style="max-width: 2000px; margin: 0 auto;">
+      </my-waterfall>
+
+      <div class="operation">
+        <h2>Props</h2>
+
+        <p>间距（0~100）<input type="range" value="10" min="0" max="100" oninput="myWaterfall.gap = this.value" /></p>
+
+        <p>列数（1~10）<input type="range" value="5" min="1" max="10" oninput="myWaterfall.cols = this.value" /></p>
+
+        <p>防抖时延（0~1000ms）<input type="range" value="300" min="0" max="1000" oninput="myWaterfall.delay = this.value" /></p>
+        
+        <p>
+          <input type="checkbox" id="useLazy" checked onchange="myWaterfall.useLazy = this.checked" />
+          <label for="useLazy">开启图片懒加载</label>
+        </p>
+
+        <p>
+          容器限宽（px）
+          <input type="number" value="2000" oninput="myWaterfall.style.maxWidth = `${(this.value || 2000)}px`" />
+        </p>
+        
+        <p>
+          <button id="add">加一项</button>
+          <button id="add100">加一百项</button>
+        </p>
+
+        <input id="uploadFile" type="file" accept=".jpg, .jpeg, .png, .gif" multiple onchange="onUpload(this)"/>
+
+        <p><button id="addImage">随机加一张刚传过的图片</button></p>
+
+        <p><button id="add10Image">随机加十张刚传过的图片</button></p>
+      </div>
+
+      <div class="back-icon to-top" onclick="onScroll('top')">↑</div>
+      <div class="back-icon to-bottom" onclick="onScroll('bottom')">↓</div>
+    </div>
+
+    <script>
+      const myWaterfall = document.querySelector('#myWaterfall')
+
+      let saveImagesList = []
+
+      function onUpload(target) {
+        const imgUrl = Array.from(target.files).map(file => URL.createObjectURL(file))
+        saveImagesList = saveImagesList.concat(imgUrl)
+        imgUrl.forEach(url => {
+          myWaterfall.appendChild(h('img', { [myWaterfall.useLazy ? 'dataSrc' : 'src']: url }))
+        })
+        target.value = ''
+      }
+
+      function onScroll(type = 'bottom') {
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top:  type === 'bottom' ? document.body.offsetHeight : 0,
+            behavior: "smooth"
+          })
+        })
+      }
+
+      function h(tag, props, txt) {
+        const el = document.createElement(tag)
+        Object.assign(el, props)
+        const { height, dataSrc, src } = props
+        if (dataSrc) {
+          el.dataset.src = dataSrc
+        }
+        if (src) {
+          el.src = src
+        }
+        if (height) {
+          el.style.height = height
+        }
+        if (txt) {
+          el.innerHTML = txt || ''
+        }
+        return el
+      }
+
+      function renderBlock(num) {
+        Array(num).fill(0).forEach(() => {
+          myWaterfall.appendChild(h('div', { height: `${Math.max(Math.round(Math.random() * 500), 200)}px` }, myWaterfall.childElementCount + 1))
+        })
+      }
+
+      function renderImages(num) {
+        const len = saveImagesList?.length
+        if(!len) {
+          alert('你还没上传过图片')
+          document.querySelector('#uploadFile').click()
+          return
+        }
+        Array(num).fill(0).forEach(() => {
+          myWaterfall.appendChild(h('img', { [myWaterfall.useLazy ? 'dataSrc' : 'src']: saveImagesList[Math.floor(Math.random() * len)] }))
+        })
+      }
+
+      document.querySelector('#add').addEventListener('click', async () => {
+        renderBlock(1)
+        await Promise.resolve()
+        onScroll('bottom')
+      })
+      document.querySelector('#add100').addEventListener('click', async () => {
+        renderBlock(100)
+        await Promise.resolve()
+        onScroll('bottom')
+      })
+      document.querySelector('#addImage').addEventListener('click', async () => {
+        renderImages(1)
+      })
+      document.querySelector('#add10Image').addEventListener('click', async () => {
+        renderImages(10)
+      })
+    </script>
+  </body>
+
+  <style>
+    ::-webkit-scrollbar {
+      display: none
+    }
+    .my-waterfall {
+      padding: 5px;
+    }
+    .my-waterfall > * {
+      padding: 12px;
+      border-radius: 6px;
+      background-color: #efefef;
+      font-size: 2em;
+      transition: top .3s, left .3s, height .3s;
+    }
+    .my-waterfall > *:hover {
+      background-color: #80808040;
+    }
+    .back-icon {
+      position: fixed;
+      background-color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      color: #409eff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 6px rgba(0,0,0,.4);
+      cursor: pointer;
+      z-index: 5;
+    }
+    .to-top {
+      right: 40px;
+      bottom: 100px;
+    }
+    .to-bottom {
+      right: 40px;
+      bottom: 40px;
+    }
+  </style>
+</html>
