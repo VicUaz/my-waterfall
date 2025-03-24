@@ -20,17 +20,6 @@ export function useWaterfall(el: HTMLElement, props: PropsOption) {
   const debounceLayout = debounce(doRelayout, props.delay)
 
   function mount() {
-    intersectionObserver = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting) {
-            const target = entry.target as HTMLImageElement
-            target.src = target.dataset.src;
-            intersectionObserver.unobserve(entry.target);
-          }
-        });
-        debounceLayout()
-      }
-    );
     sizeObserver = new ResizeObserver((entries) => {
       const isChangeElSize = entries.some(({ target: el }) => {
         return el[prevWidth] !== el.offsetWidth || el[prevHeight] !== el.offsetHeight}
@@ -56,6 +45,18 @@ export function useWaterfall(el: HTMLElement, props: PropsOption) {
       })
       doRelayout()
     })
+
+    intersectionObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          const target = entry.target as HTMLImageElement
+          target.src = target.dataset.src;
+          intersectionObserver.unobserve(entry.target);
+        }
+      })
+      doRelayout()
+    })
+
     attrsObserver = new MutationObserver(debounceLayout)
     childObserver.observe(el, { childList: true, attributes: false })
     attrsObserver.observe(el, { childList: false, attributes: true })

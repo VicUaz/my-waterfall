@@ -10,7 +10,7 @@
   <body>
     <script type="module" src="./src/index.ts"></script>
     <div id="app">
-      <my-waterfall id="myWaterfall" class="my-waterfall" cols="5" gap="10" delay="300" useLazy="true" style="max-width: 2000px; margin: 0 auto;">
+      <my-waterfall id="myWaterfall" class="my-waterfall" cols="5" gap="10" delay="300" useLazy="true" style="max-width: 2000px;">
       </my-waterfall>
 
       <div class="operation">
@@ -130,19 +130,6 @@
   <style>
     ::-webkit-scrollbar {
       display: none
-    }
-    .my-waterfall {
-      padding: 5px;
-    }
-    .my-waterfall > * {
-      padding: 12px;
-      border-radius: 6px;
-      background-color: #efefef;
-      font-size: 2em;
-      transition: top .3s, left .3s, height .3s;
-    }
-    .my-waterfall > *:hover {
-      background-color: #80808040;
     }
     .back-icon {
       position: fixed;
