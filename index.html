@@ -10,7 +10,7 @@
   <body>
     <script type="module" src="./src/index.ts"></script>
     <div id="app">
-      <my-waterfall id="myWaterfall" class="my-waterfall" cols="5" gap="10" delay="300" useLazy="true" style="max-width: 2000px;">
+      <my-waterfall id="myWaterfall" class="my-waterfall" cols="5" gap="10" delay="300" useLazy="false" style="max-width: 2000px;">
       </my-waterfall>
 
       <div class="operation">
@@ -23,7 +23,7 @@
         <p>防抖时延（0~1000ms）<input type="range" value="300" min="0" max="1000" oninput="myWaterfall.delay = this.value" /></p>
         
         <p>
-          <input type="checkbox" id="useLazy" checked onchange="myWaterfall.useLazy = this.checked" />
+          <input type="checkbox" id="useLazy" onchange="myWaterfall.useLazy = this.checked" />
           <label for="useLazy">开启图片懒加载</label>
         </p>
 

@@ -5,7 +5,7 @@ const defaultProps = () => ({
   cols: 2,
   gap: 4,
   delay: 300,
-  useLazy: true
+  useLazy: false
 })
 
 class WaterfallElement extends createWebComponent(defaultProps) {
