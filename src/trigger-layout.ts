@@ -1,7 +1,6 @@
 import { PropsOption, RenderOptions } from './types'
 
 export function triggerLayout<T extends HTMLElement>(container: T, { cols, gap }: PropsOption) {
-  console.log(`1`, 1);
   const domUtils:RenderOptions<T>  = {
     getW: el => el.offsetWidth,
     setW: (el, v) => (el.style.width = v + 'px'),

@@ -1,6 +1,6 @@
 abstract class WebComponentBase {
-  abstract render(): void
-  abstract reMount(): void
+  abstract render(): void;
+  abstract reMount(): void;
 }
 
 export const createWebComponent = <P extends Record<string, any>>(attrs: () => P) => {
