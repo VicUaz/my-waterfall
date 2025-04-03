@@ -15,3 +15,5 @@ export interface RenderOptions<T> {
   setY(el: T, v: number): void;
   getChildren(el: T): { [index: number]: T, readonly length: number };
 }
+
+export type BasicType = boolean | number | string;

@@ -24,7 +24,7 @@ export function triggerLayout<T extends HTMLElement>(container: T, { cols, gap }
     },
     setX: (el, v) => (el.style.left = v + 'px'),
     setY: (el, v) => (el.style.top = v + 'px'),
-    getChildren: (el) => el.children as any,
+    getChildren: el => el.children as unknown as { [index: number]: T, readonly length: number },
   }
   const { getW, setW, getH, setH, getPad, setX, setY, getChildren } = domUtils
   // 读
